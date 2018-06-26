@@ -142,12 +142,14 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_19__shared_pipes_station_preview_pipe__ = __webpack_require__("./src/app/shared/pipes/station-preview.pipe.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_20__shared_pipes_facility_out_of_order_alarm_pipe__ = __webpack_require__("./src/app/shared/pipes/facility-out-of-order-alarm.pipe.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_21__shared_pipes_favor_filter_pipe__ = __webpack_require__("./src/app/shared/pipes/favor-filter.pipe.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_22__facility_facility_component__ = __webpack_require__("./src/app/facility/facility.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -185,7 +187,8 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_18__station_station_component__["a" /* StationComponent */],
                 __WEBPACK_IMPORTED_MODULE_19__shared_pipes_station_preview_pipe__["a" /* StationPreviewPipe */],
                 __WEBPACK_IMPORTED_MODULE_20__shared_pipes_facility_out_of_order_alarm_pipe__["a" /* FacilityOutOfOrderAlarmPipe */],
-                __WEBPACK_IMPORTED_MODULE_21__shared_pipes_favor_filter_pipe__["a" /* FavorFilterPipe */]
+                __WEBPACK_IMPORTED_MODULE_21__shared_pipes_favor_filter_pipe__["a" /* FavorFilterPipe */],
+                __WEBPACK_IMPORTED_MODULE_22__facility_facility_component__["a" /* FacilityComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -206,6 +209,85 @@ var AppModule = /** @class */ (function () {
         })
     ], AppModule);
     return AppModule;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/facility/facility.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<div class=\"item\" \n     [ngClass]=\"[facility.state==='ACTIVE'?'item--ok':'item--fck', isFavor ? 'item--favor' : '', isPreview ? 'item--preview' : '']\"\n      >\n      <span *ngIf=\"facility.type==='ESCALATOR'\" class=\"item__icon icon-icon_escalator\"></span>\n      <span *ngIf=\"facility.type==='ELEVATOR'\" class=\"item__icon icon-icon_elevator\"></span>\n      {{facility.description || '(weitere Infos fehlen)'}}\n      <button \n        *ngIf=\"!isPreview\"\n        class=\"favor-button\" \n        [ngClass]=\"isFavor ? 'favor-button--selected' : ''\"\n        (click)=\"onFavorFacilityClicked(facility.id)\">&#9733;</button>\n</div>\n"
+
+/***/ }),
+
+/***/ "./src/app/facility/facility.component.scss":
+/***/ (function(module, exports) {
+
+module.exports = ".item {\n  padding: 10px 30px 10px 5px;\n  border-bottom: 1px solid #1f2329;\n  position: relative; }\n  .item:after {\n    content: '';\n    height: 12px;\n    width: 12px;\n    top: 23px;\n    left: -21px;\n    background-color: #1f2329;\n    border-radius: 50%;\n    display: block;\n    position: absolute;\n    border: 2px solid #414852; }\n  .item--favor {\n  -webkit-box-shadow: 0px 0px 11px 1px #1f2329 inset;\n          box-shadow: 0px 0px 11px 1px #1f2329 inset; }\n  .item__icon {\n  position: absolute;\n  font-size: 25px;\n  color: #000;\n  left: -35px;\n  top: 9px; }\n  .item--ok:after {\n  background-color: #7ca52b; }\n  .item--fck:after {\n  background-color: #d52d24; }\n  .favor-button {\n  background-color: transparent;\n  font-size: 22px;\n  border: none;\n  padding: 0;\n  color: #fff;\n  position: absolute;\n  right: 8px;\n  top: 4px; }\n  .favor-button:hover, .favor-button--selected {\n    color: #f6c502; }\n  .item--preview {\n  padding: 2px 5px 3px 5px;\n  border: none;\n  margin-bottom: 5px; }\n  .item--preview:after {\n    content: '';\n    height: 12px;\n    width: 12px;\n    top: 14px;\n    left: -21px; }\n  .item--preview .item__icon {\n    position: absolute;\n    font-size: 25px;\n    color: #000;\n    left: -35px;\n    top: 3px; }\n"
+
+/***/ }),
+
+/***/ "./src/app/facility/facility.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return FacilityComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__shared_model_facility__ = __webpack_require__("./src/app/shared/model/facility.ts");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var FacilityComponent = /** @class */ (function () {
+    function FacilityComponent() {
+        this.isPreview = false;
+        this.favor = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* EventEmitter */]();
+        this.isFavor = false;
+    }
+    FacilityComponent.prototype.ngOnInit = function () {
+    };
+    FacilityComponent.prototype.onFavorFacilityClicked = function (facilityId) {
+        this.favor.emit(facilityId);
+    };
+    FacilityComponent.prototype.ngDoCheck = function () {
+        if (this.favorFacilities) {
+            this.isFavor = this.favorFacilities.indexOf(this.facility.id) > -1;
+        }
+    };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
+        __metadata("design:type", Boolean)
+    ], FacilityComponent.prototype, "isPreview", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1__shared_model_facility__["a" /* Facility */])
+    ], FacilityComponent.prototype, "facility", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
+        __metadata("design:type", Array)
+    ], FacilityComponent.prototype, "favorFacilities", void 0);
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["P" /* Output */])(),
+        __metadata("design:type", __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* EventEmitter */])
+    ], FacilityComponent.prototype, "favor", void 0);
+    FacilityComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'stt-facility',
+            template: __webpack_require__("./src/app/facility/facility.component.html"),
+            styles: [__webpack_require__("./src/app/facility/facility.component.scss")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], FacilityComponent);
+    return FacilityComponent;
 }());
 
 
@@ -1036,14 +1118,14 @@ var WayService = /** @class */ (function () {
 /***/ "./src/app/station-search/station-search.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"search-popover\">\n  <input type=\"search\" (input)=\"onInput($event.target.value)\" placeholder=\"Bahnhof\" />\n\n  <ul class=\"stations\">\n    <li class=\"station\" *ngFor=\"let station of stationsSuggest\" (click)='onStationSelected(station)'>\n      {{station.name}}\n    </li>\n  </ul>\n\n  <button (click)=\"onCancelClick()\" class=\"button button--large\">Abbrechen</button>\n</div>"
+module.exports = "<div class=\"search-popover\">\n  <input type=\"search\" (input)=\"onInput($event.target.value)\" placeholder=\"Bahnhof\" />\n\n  <ul class=\"stations\">\n    <li class=\"station\" *ngFor=\"let station of stationsSuggest\" (click)='onStationSelected(station)'>\n      {{station.name}}\n    </li>\n  </ul>\n\n  \n  <button (click)=\"onCancelClick()\" class=\"abort-button icon-button icon-button--s icon-icon_abort\"></button>\n</div>"
 
 /***/ }),
 
 /***/ "./src/app/station-search/station-search.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".search-popover {\n  position: fixed;\n  top: 30px;\n  left: 50%;\n  margin-left: -150px;\n  width: 300px;\n  background-color: #2f343d;\n  border: 4px solid #1f2329;\n  padding: 10px;\n  -webkit-box-shadow: 0px 0px 20px 1px #000;\n          box-shadow: 0px 0px 20px 1px #000; }\n\n.stations {\n  list-style-type: none;\n  padding: 0; }\n\n.station {\n  display: block;\n  padding: 5px 0;\n  margin-bottom: 5px;\n  border-bottom: 1px solid #1f2329; }\n"
+module.exports = ".search-popover {\n  position: fixed;\n  top: 30px;\n  left: 50%;\n  margin-left: -150px;\n  width: 300px;\n  background-color: #2f343d;\n  border: 4px solid #1f2329;\n  padding: 10px;\n  -webkit-box-shadow: 0px 0px 20px 1px #000;\n          box-shadow: 0px 0px 20px 1px #000; }\n\n.stations {\n  list-style-type: none;\n  padding: 0; }\n\n.station {\n  display: block;\n  padding: 5px 0;\n  margin-bottom: 5px;\n  border-bottom: 1px solid #ffd21f; }\n\n.abort-button {\n  position: absolute;\n  bottom: -10px;\n  right: -8px; }\n"
 
 /***/ }),
 
@@ -1129,14 +1211,14 @@ var StationSearchComponent = /** @class */ (function () {
 /***/ "./src/app/station/station.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"edit\" class=\"station-edit\">\n  <span class=\"federal-state\">{{station.federalState}}</span>\n  <strong class=\"station-name\">{{station.name}}</strong>\n  <button (click)=\"onRemoveClicked()\" class=\"refresh-button\">Entfernen</button>\n</div>\n\n\n<div *ngIf=\"!edit\" class=\"container\">\n  \n  <div class=\"header\" [ngClass]=\"facilities | facilityOutOfOrderAlarm:station.hasSteplessAccess:'header--ok':'header--alarm'\">    \n    <span class=\"federal-state\">{{station.federalState}}</span>\n    <strong class=\"station-name\">{{station.name}}</strong>\n    <button class=\"refresh-button\" (click)=\"onRefreshClicked()\">Refresh</button>\n  </div>\n\n  \n  <div class=\"favor-container\">\n  \n      <div *ngIf=\"facilities.length === 0\">\n        Keine Fahrstühle bekannt.\n        <span *ngIf=\"station.hasSteplessAccess==='yes'\">Der Bahnhof ist ohne Treppen erreichbar.</span>\n        <span *ngIf=\"station.hasSteplessAccess!=='yes'\">Der Bahnhof ist nicht ohne Treppen erreichbar.</span>\n      </div>\n      \n      <div *ngIf=\"facilities.length > 0\">\n          <div *ngFor=\"let facility of facilities | favorFilter:station.favorFacilities\"  class=\"details-item\" [ngClass]=\"facility.state==='ACTIVE'?'details-item--ok':'details-item--fck'\">\n              <span *ngIf=\"facility.type==='ESCALATOR'\">Rolltreppe</span>\n              <span *ngIf=\"facility.type==='ELEVATOR'\">Fahrstuhl</span>\n              {{facility.description}}\n            </div>          \n      </div>\n\n      <button (click)=\"onToggleDetailsVisible()\" *ngIf=\"facilities.length>0\">Details</button>\n  </div>\n  \n\n  <div class=\"details-container\" *ngIf=\"detailsVisible\">\n    <div *ngFor=\"let facility of facilities\" class=\"details-item\" [ngClass]=\"facility.state==='ACTIVE'?'details-item--ok':'details-item--fck'\">\n      <span *ngIf=\"facility.type==='ESCALATOR'\">Rolltreppe</span>\n      <span *ngIf=\"facility.type==='ELEVATOR'\">Fahrstuhl</span>\n      {{facility.description}}\n      <button \n        class=\"favor-button\" \n        [ngClass]=\"station.favorFacilities.indexOf(facility.id) > -1 ? 'favor-button--selected' : ''\"\n        (click)=\"onFavorFacilityClicked(facility.id)\">&#9733;</button>\n    </div>\n  </div>\n\n</div>"
+module.exports = "<div *ngIf=\"edit\" class=\"container container--edit\">\n  <span class=\"federal-state federal-state--edit\">{{station.federalState}}</span>\n  <strong class=\"station-name station-name--edit\">{{station.name}}</strong>\n  <button (click)=\"onRemoveClicked()\" class=\"remove-button icon-button icon-button--xs icon-icon_garbage\"></button>\n</div>\n\n\n<div *ngIf=\"!edit\" class=\"container\">\n  \n  <div class=\"header header--sticky\" [ngClass]=\"facilities | facilityOutOfOrderAlarm:station.hasSteplessAccess:'header--ok':'header--alarm'\">    \n    <span class=\"federal-state\">{{station.federalState}}</span>\n    <strong class=\"station-name\">{{station.name}}</strong>\n    <button class=\"refresh-button icon-refresh\" (click)=\"onRefreshClicked()\"></button>\n  </div>\n\n  <div class=\"facilities-container\" *ngIf=\"facilities\">\n  \n    <div *ngIf=\"facilities.length === 0\">\n      Keine Fahrstühle bekannt.\n      <span *ngIf=\"station.hasSteplessAccess==='yes'\">Der Bahnhof ist ohne Treppen erreichbar.</span>\n      <span *ngIf=\"station.hasSteplessAccess!=='yes'\">Der Bahnhof ist nicht ohne Treppen erreichbar.</span>\n    </div>\n    \n    <div *ngIf=\"facilities.length > 0\">\n        <stt-facility\n          *ngFor=\"let facility of facilities | favorFilter:station.favorFacilities\"\n          [facility]=\"facility\"\n          [isPreview]=\"true\"></stt-facility>\n        <div class=\"nothing-to-preview\">Läuft.</div>\n    </div>\n\n    <div class=\"details-button-container\" *ngIf=\"facilities.length > 0\"> \n      <button (click)=\"onToggleDetailsVisible()\" \n              class=\"details-button\" \n              [ngClass]=\"detailsVisible ? 'details-button--selected' : ''\">alle ({{facilities.length}})</button>\n    </div>\n\n</div>\n\n\n<div class=\"facilities-container facilities-container--details\" *ngIf=\"detailsVisible\">\n  <stt-facility \n    *ngFor=\"let facility of facilities\" \n    [facility]=\"facility\" \n    [favorFacilities]=\"station.favorFacilities\"\n    (favor)=\"onFavorFacilityClicked($event)\"></stt-facility>\n</div>\n\n</div>"
 
 /***/ }),
 
 /***/ "./src/app/station/station.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".container {\n  margin-bottom: 30px; }\n\n.header {\n  padding: 0 0 0 40px;\n  position: relative;\n  margin-bottom: 10px; }\n\n.header:after {\n    content: '';\n    height: 25px;\n    width: 25px;\n    top: 8px;\n    left: 5px;\n    background-color: #1f2329;\n    border-radius: 50%;\n    display: block;\n    position: absolute;\n    border: 3px solid #414852; }\n\n.header--ok:after {\n  background-color: #7ca52b; }\n\n.header--alarm:after {\n  background-color: #d52d24; }\n\n.federal-state {\n  text-transform: uppercase;\n  font-size: 11px;\n  display: block; }\n\n.station-name {\n  display: block;\n  font-size: 20px;\n  border-bottom: 1px solid #fff; }\n\n.refresh-button {\n  background-color: transparent;\n  color: #fff;\n  border: 1px solid #fff;\n  padding: 2px;\n  font-size: 11px;\n  position: absolute;\n  bottom: 5px;\n  right: 0; }\n\n.details-container {\n  padding: 0 0 0 40px; }\n\n.favor-container {\n  padding: 0 0 0 40px; }\n\n.favor-button {\n  background-color: transparent;\n  font-size: 20px;\n  border: none;\n  padding: 0;\n  color: #fff; }\n\n.favor-button--selected {\n  color: #f6c502; }\n\n.details-item {\n  padding-left: 20px;\n  position: relative;\n  margin-bottom: 5px; }\n\n.details-item:after {\n    content: '';\n    height: 12px;\n    width: 12px;\n    top: 10px;\n    left: 1px;\n    background-color: #1f2329;\n    border-radius: 50%;\n    display: block;\n    position: absolute;\n    border: 2px solid #414852; }\n\n.details-item--ok:after {\n  background-color: #7ca52b; }\n\n.details-item--fck:after {\n  background-color: #d52d24; }\n\n.station-edit {\n  margin-bottom: 10px;\n  padding: 3px 0;\n  position: relative; }\n"
+module.exports = ".container {\n  margin-bottom: 50px; }\n  .container--edit {\n    margin-bottom: 10px;\n    padding: 3px 0;\n    position: relative; }\n  .header {\n  padding: 5px 0 0 0;\n  position: relative;\n  margin-bottom: 10px; }\n  .header:after {\n    content: '';\n    height: 25px;\n    width: 25px;\n    top: 20px;\n    left: 3px;\n    background-color: #414852;\n    border-radius: 50%;\n    display: block;\n    position: absolute;\n    border: 6px solid #1f2329; }\n  .header--ok:after {\n  background-color: #7ca52b; }\n  .header--alarm:after {\n  background-color: #d52d24; }\n  .header--sticky {\n  position: -webkit-sticky;\n  position: sticky;\n  top: 0px;\n  background-color: #2f343d;\n  z-index: 2; }\n  .federal-state {\n  text-transform: uppercase;\n  font-size: 11px;\n  display: block;\n  padding: 0 0 0 35px; }\n  .federal-state--edit {\n    padding-left: 0; }\n  .station-name {\n  display: block;\n  font-size: 20px;\n  border-bottom: 1px solid #fff;\n  padding: 0 0 5px 35px; }\n  .station-name--edit {\n    padding-left: 0; }\n  .refresh-button {\n  background-color: transparent;\n  border: none;\n  padding: 2px;\n  font-size: 15px;\n  position: absolute;\n  bottom: 7px;\n  right: 2px;\n  color: #fff;\n  border-radius: 50%; }\n  .refresh-button:hover {\n    color: #f6c502; }\n  .remove-button {\n  position: absolute;\n  bottom: 8px;\n  right: 2px; }\n  .facilities-container {\n  padding: 0 0 0 39px; }\n  .facilities-container--details {\n    border-bottom: 1px solid #fff; }\n  .details-button-container {\n  width: 100%;\n  height: 25px;\n  border-bottom: 1px solid #fff;\n  position: relative; }\n  .details-button {\n  background-color: #fff;\n  padding: 2px 5px;\n  border: none;\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n  color: #1f2329;\n  position: absolute;\n  right: 5px;\n  bottom: 0px; }\n  .details-button:hover, .details-button--selected {\n    background-color: #f6c502; }\n  .nothing-to-preview {\n  display: none; }\n  .nothing-to-preview:first-child {\n    display: block;\n    color: #1f2329;\n    padding: 5px;\n    text-shadow: 1px 1px 0px #414852;\n    font-weight: bold; }\n"
 
 /***/ }),
 
@@ -1230,7 +1312,7 @@ var StationComponent = /** @class */ (function () {
 /***/ "./src/app/way-details-edit/way-details-edit.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"way\">\n  \n  <input [(ngModel)]=\"way.title\" (change)=\"onTitleChanged()\" placeholder=\"Titel\">\n\n  <div class=\"stations\">\n    <stt-station \n      *ngFor=\"let station of way.stations\" \n      [station]=\"station\" \n      [edit]=\"true\"\n      (remove)=\"onRemoveStationClicked($event)\"></stt-station>\n  </div>\n\n\n  <button (click)=\"onAddStationClicked()\" class=\"button button--large\">Station hinzufügen</button>\n  <a [routerLink]=\"['/meine-routen', 'details', way.id]\" class=\"button button--large\">Fertig</a>\n  <button (click)=\"onKillWayClicked()\" class=\"button\">Route \"{{way.title}}\" löschen</button>\n\n  <stt-station-search \n    *ngIf=\"isStationSerach\" \n    (canceled)=\"onAddStationCanceled()\"\n    (selected)=\"onStationSelected($event)\"></stt-station-search>\n</div>  \n"
+module.exports = "<div *ngIf=\"way\">\n  \n  <input [(ngModel)]=\"way.title\" (change)=\"onTitleChanged()\" placeholder=\"Titel\">\n\n  <div class=\"stations\">\n    <stt-station \n      *ngFor=\"let station of way.stations\" \n      [station]=\"station\" \n      [edit]=\"true\"\n      (remove)=\"onRemoveStationClicked($event)\"></stt-station>\n  </div>\n\n  <div *ngIf=\"way.stations.length === 0\" class=\"nothing-to-see-here-notice\">\n      Keine Stationen vorhanden.<br /> \n      Um Stationen hinzuzufügen, nutze den <span class=\"icon-icon_add nothing-to-see-here-notice__icon\"></span> Button.\n  </div>\n\n\n  <button (click)=\"onAddStationClicked()\" class=\"icon-button icon-icon_add\"></button>\n\n  <button (click)=\"onKillWayClicked()\" class=\"icon-button icon-icon_garbage\"></button>\n\n  <div class=\"bbar\">\n      <a [routerLink]=\"['/meine-routen', 'details', way.id]\" class=\"icon-button icon-button--main-bbar icon-icon_check\"></a>\n  </div>\n\n  <stt-station-search \n    *ngIf=\"isStationSerach\" \n    (canceled)=\"onAddStationCanceled()\"\n    (selected)=\"onStationSelected($event)\"></stt-station-search>\n</div>  \n"
 
 /***/ }),
 
@@ -1329,7 +1411,7 @@ var WayDetailsEditComponent = /** @class */ (function () {
 /***/ "./src/app/way-details/way-details.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"way\">\n  <h1 class=\"main-headline\">{{way.title}}</h1>\n\n  <stt-station \n    *ngFor=\"let station of way.stations\"\n    (favor)=\"onFavorClicked($event)\"\n    [station]=\"station\" \n    [edit]=\"false\"\n    ></stt-station>\n\n  <a class=\"button button--large\" [routerLink]=\"['/meine-routen', 'details', way.id, 'bearbeiten']\">Bearbeiten</a>\n  <a class=\"button button--large\" [routerLink]=\"['/meine-routen']\">Zur Übersicht</a>\n</div>"
+module.exports = "<div *ngIf=\"way\">\n  <h1 class=\"main-headline\">{{way.title || 'Unbenannt'}}</h1>\n\n  <stt-station \n    *ngFor=\"let station of way.stations\"\n    (favor)=\"onFavorClicked($event)\"\n    [station]=\"station\" \n    [edit]=\"false\"\n    ></stt-station>\n\n\n  <a class=\"icon-button icon-button--back icon-icon_back\" [routerLink]=\"['/meine-routen']\"></a>\n\n  <div *ngIf=\"way.stations.length === 0\" class=\"nothing-to-see-here-notice\">\n      Keine Stationen vorhanden.<br /> \n      Um Stationen hinzuzufügen, gehe mit dem <span class=\"icon-icon_edit nothing-to-see-here-notice__icon\"></span> Button in \n      den Bearbeiten-Modus. \n  </div>\n\n  <div class=\"bbar\">\n      <a class=\"icon-button icon-button--main-bbar icon-icon_edit\" [routerLink]=\"['/meine-routen', 'details', way.id, 'bearbeiten']\"></a>\n  </div>\n\n</div>"
 
 /***/ }),
 
@@ -1402,14 +1484,14 @@ var WayDetailsComponent = /** @class */ (function () {
 /***/ "./src/app/ways-overview/ways-overview.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n\n  <h1 class=\"main-headline\">Meine Routen</h1>\n\n  <ul class=\"ways\">\n    <li *ngFor=\"let way of ways\" class=\"way\">\n      <a [routerLink]=\"['details', way.id]\">\n\n        <h5 class=\"way__title\">{{way.title || 'unbenannt'}}</h5>\n        <span class=\"way__description\">{{way.stations | stationPreview:2}}</span>\n\n      </a>\n    </li>\n  </ul>\n\n  <button class=\"button button--large\" (click)=\"onClickNewButton($event)\">Neue Route</button>\n\n</div>\n"
+module.exports = "<div>\n\n  <h1 class=\"main-headline\">Meine Routen</h1>\n\n  <ul class=\"ways\">\n    <li *ngFor=\"let way of ways\" class=\"way\">\n      <a [routerLink]=\"['details', way.id]\">\n\n        <h5 class=\"way__title\">{{way.title || 'unbenannt'}}</h5>\n        <span class=\"way__description\">{{way.stations | stationPreview:2}}</span>\n\n      </a>\n    </li>\n  </ul>\n\n  <div *ngIf=\"ways.length === 0\" class=\"nothing-to-see-here-notice\">\n    Keine Routen vorhanden.<br /> \n    Um eine neue Route anzulegen nutze den <span class=\"icon-icon_add nothing-to-see-here-notice__icon\"></span> Button. \n  </div>\n\n  <div class=\"bbar\">\n      <button class=\"icon-button icon-icon_add icon-button--main-bbar\" (click)=\"onClickNewButton($event)\"></button>\n  </div>\n\n</div>\n"
 
 /***/ }),
 
 /***/ "./src/app/ways-overview/ways-overview.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".ways {\n  list-style-type: none;\n  padding: 0; }\n\n.way {\n  display: block;\n  background-color: #414852;\n  margin-bottom: 10px;\n  padding: 10px; }\n\na {\n  display: block;\n  text-decoration: none; }\n\n.way__title {\n  color: #fff;\n  font-size: 20px;\n  margin: 0 0 5px 0;\n  text-decoration: none; }\n\n.way__description {\n  color: #fff;\n  text-decoration: none; }\n"
+module.exports = ".ways {\n  list-style-type: none;\n  padding: 0;\n  margin-bottom: 80px; }\n\n.way {\n  display: block;\n  background-color: #414852;\n  margin-bottom: 10px;\n  padding: 10px; }\n\na {\n  display: block;\n  text-decoration: none; }\n\n.way__title {\n  color: #fff;\n  font-size: 20px;\n  margin: 0 0 5px 0;\n  text-decoration: none; }\n\n.way__description {\n  color: #fff;\n  text-decoration: none; }\n"
 
 /***/ }),
 
