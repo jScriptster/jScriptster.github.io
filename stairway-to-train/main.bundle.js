@@ -73,7 +73,7 @@ module.exports = "<!--The content below is only a placeholder and can be replace
 /***/ "./src/app/app.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".main-wrapper {\n  width: 100%;\n  max-width: 550px;\n  margin: 0 auto;\n  padding: 0 10px;\n  border-left: 1px solid #1f2329;\n  border-right: 1px solid #1f2329;\n  min-height: 100vh; }\n"
+module.exports = ".main-wrapper {\n  width: 100%;\n  max-width: 550px;\n  margin: 60px auto 90px  auto;\n  padding: 0 10px;\n  border-left: 1px solid #1f2329;\n  border-right: 1px solid #1f2329;\n  min-height: 100vh; }\n"
 
 /***/ }),
 
@@ -225,7 +225,7 @@ module.exports = "<div class=\"item\" \n     [ngClass]=\"[facility.state==='ACTI
 /***/ "./src/app/facility/facility.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".item {\n  padding: 10px 30px 10px 5px;\n  border-bottom: 1px solid #1f2329;\n  position: relative; }\n  .item:after {\n    content: '';\n    height: 12px;\n    width: 12px;\n    top: 23px;\n    left: -21px;\n    background-color: #1f2329;\n    border-radius: 50%;\n    display: block;\n    position: absolute;\n    border: 2px solid #414852; }\n  .item--favor {\n  -webkit-box-shadow: 0px 0px 11px 1px #1f2329 inset;\n          box-shadow: 0px 0px 11px 1px #1f2329 inset; }\n  .item__icon {\n  position: absolute;\n  font-size: 25px;\n  color: #000;\n  left: -35px;\n  top: 9px; }\n  .item--ok:after {\n  background-color: #7ca52b; }\n  .item--fck:after {\n  background-color: #d52d24; }\n  .favor-button {\n  background-color: transparent;\n  font-size: 22px;\n  border: none;\n  padding: 0;\n  color: #fff;\n  position: absolute;\n  right: 8px;\n  top: 4px; }\n  .favor-button:hover, .favor-button--selected {\n    color: #f6c502; }\n  .item--preview {\n  padding: 2px 5px 3px 5px;\n  border: none;\n  margin-bottom: 5px; }\n  .item--preview:after {\n    content: '';\n    height: 12px;\n    width: 12px;\n    top: 14px;\n    left: -21px; }\n  .item--preview .item__icon {\n    position: absolute;\n    font-size: 25px;\n    color: #000;\n    left: -35px;\n    top: 3px; }\n"
+module.exports = ".item {\n  padding: 10px 30px 10px 5px;\n  border-bottom: 1px solid #1f2329;\n  position: relative; }\n  .item:after {\n    content: '';\n    height: 12px;\n    width: 12px;\n    top: 23px;\n    left: -21px;\n    background-color: #1f2329;\n    border-radius: 50%;\n    display: block;\n    position: absolute;\n    border: 2px solid #414852; }\n  .item--favor {\n  -webkit-box-shadow: 0px 0px 11px 1px #1f2329 inset;\n          box-shadow: 0px 0px 11px 1px #1f2329 inset; }\n  .item__icon {\n  position: absolute;\n  font-size: 25px;\n  color: #000;\n  left: -35px;\n  top: 9px; }\n  .item--ok:after {\n  background-color: #7ca52b; }\n  .item--fck:after {\n  background-color: #d52d24; }\n  .favor-button {\n  background-color: transparent;\n  font-size: 22px;\n  border: none;\n  padding: 0;\n  color: #fff;\n  position: absolute;\n  right: 8px;\n  top: 4px; }\n  .favor-button--selected {\n    color: #f6c502; }\n  .item--preview {\n  padding: 2px 5px 3px 5px;\n  border: none;\n  margin-bottom: 5px; }\n  .item--preview:after {\n    content: '';\n    height: 12px;\n    width: 12px;\n    top: 14px;\n    left: -21px; }\n  .item--preview .item__icon {\n    position: absolute;\n    font-size: 25px;\n    color: #000;\n    left: -35px;\n    top: 3px; }\n"
 
 /***/ }),
 
@@ -248,20 +248,40 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 
 var FacilityComponent = /** @class */ (function () {
-    function FacilityComponent() {
+    function FacilityComponent(differs) {
         this.isPreview = false;
         this.favor = new __WEBPACK_IMPORTED_MODULE_0__angular_core__["v" /* EventEmitter */]();
         this.isFavor = false;
+        this.differ = differs.find([]).create(null);
     }
     FacilityComponent.prototype.ngOnInit = function () {
     };
     FacilityComponent.prototype.onFavorFacilityClicked = function (facilityId) {
         this.favor.emit(facilityId);
     };
+    //ngDoCheck() {
+    //  if (this.favorFacilities) {
+    //    this.isFavor = this.favorFacilities.indexOf(this.facility.id) > -1;
+    //  }
+    //}
     FacilityComponent.prototype.ngDoCheck = function () {
-        if (this.favorFacilities) {
-            this.isFavor = this.favorFacilities.indexOf(this.facility.id) > -1;
+        var _this = this;
+        var change = this.differ.diff(this.favorFacilities);
+        if (change) {
+            change.forEachAddedItem(function (el) {
+                if (el.item === _this.facility.id) {
+                    _this.isFavor = true;
+                }
+            });
+            change.forEachRemovedItem(function (el) {
+                if (el.item === _this.facility.id) {
+                    _this.isFavor = false;
+                }
+            });
         }
+        // here you can do what you want on array change
+        // you can check for forEachAddedItem or forEachRemovedItem on change object to see the added/removed items
+        // Attention: ngDoCheck() is triggered at each binded variable on componenet; if you have more than one in your component, make sure you filter here the one you want.
     };
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["D" /* Input */])(),
@@ -285,7 +305,7 @@ var FacilityComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/facility/facility.component.html"),
             styles: [__webpack_require__("./src/app/facility/facility.component.scss")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_0__angular_core__["E" /* IterableDiffers */]])
     ], FacilityComponent);
     return FacilityComponent;
 }());
@@ -1125,7 +1145,7 @@ module.exports = "<div class=\"search-popover\">\n  <input type=\"search\" (inpu
 /***/ "./src/app/station-search/station-search.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".search-popover {\n  position: fixed;\n  top: 30px;\n  left: 50%;\n  margin-left: -150px;\n  width: 300px;\n  background-color: #2f343d;\n  border: 4px solid #1f2329;\n  padding: 10px;\n  -webkit-box-shadow: 0px 0px 20px 1px #000;\n          box-shadow: 0px 0px 20px 1px #000; }\n\n.stations {\n  list-style-type: none;\n  padding: 0; }\n\n.station {\n  display: block;\n  padding: 5px 0;\n  margin-bottom: 5px;\n  border-bottom: 1px solid #ffd21f; }\n\n.abort-button {\n  position: absolute;\n  bottom: -10px;\n  right: -8px; }\n"
+module.exports = ".search-popover {\n  position: fixed;\n  top: 30px;\n  left: 50%;\n  margin-left: -150px;\n  width: 300px;\n  background-color: #2f343d;\n  border: 4px solid #1f2329;\n  padding: 10px;\n  -webkit-box-shadow: 0px 0px 20px 1px #000;\n          box-shadow: 0px 0px 20px 1px #000;\n  z-index: 4; }\n\n.stations {\n  list-style-type: none;\n  padding: 0; }\n\n.station {\n  display: block;\n  padding: 5px 0;\n  margin-bottom: 5px;\n  border-bottom: 1px solid #ffd21f; }\n\n.abort-button {\n  position: absolute;\n  bottom: -10px;\n  right: -8px; }\n"
 
 /***/ }),
 
@@ -1218,7 +1238,7 @@ module.exports = "<div *ngIf=\"edit\" class=\"container container--edit\">\n  <s
 /***/ "./src/app/station/station.component.scss":
 /***/ (function(module, exports) {
 
-module.exports = ".container {\n  margin-bottom: 50px; }\n  .container--edit {\n    margin-bottom: 10px;\n    padding: 3px 0;\n    position: relative; }\n  .header {\n  padding: 5px 0 0 0;\n  position: relative;\n  margin-bottom: 10px; }\n  .header:after {\n    content: '';\n    height: 25px;\n    width: 25px;\n    top: 20px;\n    left: 3px;\n    background-color: #414852;\n    border-radius: 50%;\n    display: block;\n    position: absolute;\n    border: 6px solid #1f2329; }\n  .header--ok:after {\n  background-color: #7ca52b; }\n  .header--alarm:after {\n  background-color: #d52d24; }\n  .header--sticky {\n  position: -webkit-sticky;\n  position: sticky;\n  top: 0px;\n  background-color: #2f343d;\n  z-index: 2; }\n  .federal-state {\n  text-transform: uppercase;\n  font-size: 11px;\n  display: block;\n  padding: 0 0 0 35px; }\n  .federal-state--edit {\n    padding-left: 0; }\n  .station-name {\n  display: block;\n  font-size: 20px;\n  border-bottom: 1px solid #fff;\n  padding: 0 0 5px 35px; }\n  .station-name--edit {\n    padding-left: 0; }\n  .refresh-button {\n  background-color: transparent;\n  border: none;\n  padding: 2px;\n  font-size: 15px;\n  position: absolute;\n  bottom: 7px;\n  right: 2px;\n  color: #fff;\n  border-radius: 50%; }\n  .refresh-button:hover {\n    color: #f6c502; }\n  .remove-button {\n  position: absolute;\n  bottom: 8px;\n  right: 2px; }\n  .facilities-container {\n  padding: 0 0 0 39px; }\n  .facilities-container--details {\n    border-bottom: 1px solid #fff; }\n  .details-button-container {\n  width: 100%;\n  height: 25px;\n  border-bottom: 1px solid #fff;\n  position: relative; }\n  .details-button {\n  background-color: #fff;\n  padding: 2px 5px;\n  border: none;\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n  color: #1f2329;\n  position: absolute;\n  right: 5px;\n  bottom: 0px; }\n  .details-button:hover, .details-button--selected {\n    background-color: #f6c502; }\n  .nothing-to-preview {\n  display: none; }\n  .nothing-to-preview:first-child {\n    display: block;\n    color: #1f2329;\n    padding: 5px;\n    text-shadow: 1px 1px 0px #414852;\n    font-weight: bold; }\n"
+module.exports = ".container {\n  margin-bottom: 50px; }\n  .container--edit {\n    margin-bottom: 10px;\n    padding: 3px 0;\n    position: relative; }\n  .header {\n  padding: 5px 0 0 0;\n  position: relative;\n  margin-bottom: 10px; }\n  .header:after {\n    content: '';\n    height: 25px;\n    width: 25px;\n    top: 20px;\n    left: 3px;\n    background-color: #414852;\n    border-radius: 50%;\n    display: block;\n    position: absolute;\n    border: 6px solid #1f2329; }\n  .header--ok:after {\n  background-color: #7ca52b; }\n  .header--alarm:after {\n  background-color: #d52d24; }\n  .header--sticky {\n  position: -webkit-sticky;\n  position: sticky;\n  top: 55px;\n  background-color: #2f343d;\n  z-index: 2; }\n  .federal-state {\n  text-transform: uppercase;\n  font-size: 11px;\n  display: block;\n  padding: 0 0 0 35px; }\n  .federal-state--edit {\n    padding-left: 0; }\n  .station-name {\n  display: block;\n  font-size: 20px;\n  border-bottom: 1px solid #fff;\n  padding: 0 0 5px 35px; }\n  .station-name--edit {\n    padding-left: 0; }\n  .refresh-button {\n  background-color: transparent;\n  border: none;\n  padding: 2px;\n  font-size: 15px;\n  position: absolute;\n  bottom: 7px;\n  right: 2px;\n  color: #fff;\n  border-radius: 50%; }\n  .remove-button {\n  position: absolute;\n  bottom: 8px;\n  right: 2px; }\n  .facilities-container {\n  padding: 0 0 0 39px; }\n  .facilities-container--details {\n    border-bottom: 1px solid #fff; }\n  .details-button-container {\n  width: 100%;\n  height: 25px;\n  border-bottom: 1px solid #fff;\n  position: relative; }\n  .details-button {\n  background-color: #fff;\n  padding: 2px 5px;\n  border: none;\n  border-top-left-radius: 3px;\n  border-top-right-radius: 3px;\n  color: #1f2329;\n  position: absolute;\n  right: 5px;\n  bottom: 0px; }\n  .details-button--selected {\n    background-color: #f6c502; }\n  .nothing-to-preview {\n  display: none; }\n  .nothing-to-preview:first-child {\n    display: block;\n    color: #1f2329;\n    padding: 5px;\n    text-shadow: 1px 1px 0px #414852;\n    font-weight: bold; }\n"
 
 /***/ }),
 
@@ -1312,7 +1332,7 @@ var StationComponent = /** @class */ (function () {
 /***/ "./src/app/way-details-edit/way-details-edit.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"way\">\n  \n  <input [(ngModel)]=\"way.title\" (change)=\"onTitleChanged()\" placeholder=\"Titel\">\n\n  <div class=\"stations\">\n    <stt-station \n      *ngFor=\"let station of way.stations\" \n      [station]=\"station\" \n      [edit]=\"true\"\n      (remove)=\"onRemoveStationClicked($event)\"></stt-station>\n  </div>\n\n  <div *ngIf=\"way.stations.length === 0\" class=\"nothing-to-see-here-notice\">\n      Keine Stationen vorhanden.<br /> \n      Um Stationen hinzuzufügen, nutze den <span class=\"icon-icon_add nothing-to-see-here-notice__icon\"></span> Button.\n  </div>\n\n\n  <button (click)=\"onAddStationClicked()\" class=\"icon-button icon-icon_add\"></button>\n\n  <button (click)=\"onKillWayClicked()\" class=\"icon-button icon-icon_garbage\"></button>\n\n  <div class=\"bbar\">\n      <a [routerLink]=\"['/meine-routen', 'details', way.id]\" class=\"icon-button icon-button--main-bbar icon-icon_check\"></a>\n  </div>\n\n  <stt-station-search \n    *ngIf=\"isStationSerach\" \n    (canceled)=\"onAddStationCanceled()\"\n    (selected)=\"onStationSelected($event)\"></stt-station-search>\n</div>  \n"
+module.exports = "<div class=\"tbar\">\n    <button (click)=\"onKillWayClicked()\" class=\"icon-button icon-button--s icon-button--delete-way icon-icon_garbage\"></button>\n  </div>\n\n<div *ngIf=\"way\">\n  \n  <input [(ngModel)]=\"way.title\" (change)=\"onTitleChanged()\" placeholder=\"Titel\">\n\n  <div class=\"stations\">\n    <stt-station \n      *ngFor=\"let station of way.stations\" \n      [station]=\"station\" \n      [edit]=\"true\"\n      (remove)=\"onRemoveStationClicked($event)\"></stt-station>\n  </div>\n\n  <div *ngIf=\"way.stations.length === 0\" class=\"nothing-to-see-here-notice\">\n      Keine Stationen vorhanden.<br /> \n      Um Stationen hinzuzufügen, nutze den <span class=\"icon-icon_add nothing-to-see-here-notice__icon\"></span> Button.\n  </div>\n\n  <div class=\"bbar\">\n      <a [routerLink]=\"['/meine-routen', 'details', way.id]\" class=\"icon-button icon-button--main-bbar icon-icon_check\"></a>\n      <button (click)=\"onAddStationClicked()\" class=\"icon-button icon-button--add-station icon-button--s icon-icon_add\"></button>\n  </div>\n\n  <stt-station-search \n    *ngIf=\"isStationSerach\" \n    (canceled)=\"onAddStationCanceled()\"\n    (selected)=\"onStationSelected($event)\"></stt-station-search>\n</div>  \n"
 
 /***/ }),
 
@@ -1411,7 +1431,7 @@ var WayDetailsEditComponent = /** @class */ (function () {
 /***/ "./src/app/way-details/way-details.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"way\">\n  <h1 class=\"main-headline\">{{way.title || 'Unbenannt'}}</h1>\n\n  <stt-station \n    *ngFor=\"let station of way.stations\"\n    (favor)=\"onFavorClicked($event)\"\n    [station]=\"station\" \n    [edit]=\"false\"\n    ></stt-station>\n\n\n  <a class=\"icon-button icon-button--back icon-icon_back\" [routerLink]=\"['/meine-routen']\"></a>\n\n  <div *ngIf=\"way.stations.length === 0\" class=\"nothing-to-see-here-notice\">\n      Keine Stationen vorhanden.<br /> \n      Um Stationen hinzuzufügen, gehe mit dem <span class=\"icon-icon_edit nothing-to-see-here-notice__icon\"></span> Button in \n      den Bearbeiten-Modus. \n  </div>\n\n  <div class=\"bbar\">\n      <a class=\"icon-button icon-button--main-bbar icon-icon_edit\" [routerLink]=\"['/meine-routen', 'details', way.id, 'bearbeiten']\"></a>\n  </div>\n\n</div>"
+module.exports = "<div class=\"tbar\">\n  <a class=\"icon-button icon-button--back icon-icon_back\" [routerLink]=\"['/meine-routen']\"></a>\n</div>\n\n\n<div *ngIf=\"way\">\n  <h1 class=\"main-headline\">{{way.title || 'Unbenannt'}}</h1>\n\n  <stt-station \n    *ngFor=\"let station of way.stations\"\n    (favor)=\"onFavorClicked($event)\"\n    [station]=\"station\" \n    [edit]=\"false\"\n    ></stt-station>\n\n\n  \n\n  <div *ngIf=\"way.stations.length === 0\" class=\"nothing-to-see-here-notice\">\n      Keine Stationen vorhanden.<br /> \n      Um Stationen hinzuzufügen, gehe mit dem <span class=\"icon-icon_edit nothing-to-see-here-notice__icon\"></span> Button in \n      den Bearbeiten-Modus. \n  </div>\n\n  <div class=\"bbar\">\n      <a class=\"icon-button icon-button--main-bbar icon-icon_edit\" [routerLink]=\"['/meine-routen', 'details', way.id, 'bearbeiten']\"></a>\n  </div>\n\n</div>"
 
 /***/ }),
 
@@ -1484,7 +1504,7 @@ var WayDetailsComponent = /** @class */ (function () {
 /***/ "./src/app/ways-overview/ways-overview.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div>\n\n  <h1 class=\"main-headline\">Meine Routen</h1>\n\n  <ul class=\"ways\">\n    <li *ngFor=\"let way of ways\" class=\"way\">\n      <a [routerLink]=\"['details', way.id]\">\n\n        <h5 class=\"way__title\">{{way.title || 'unbenannt'}}</h5>\n        <span class=\"way__description\">{{way.stations | stationPreview:2}}</span>\n\n      </a>\n    </li>\n  </ul>\n\n  <div *ngIf=\"ways.length === 0\" class=\"nothing-to-see-here-notice\">\n    Keine Routen vorhanden.<br /> \n    Um eine neue Route anzulegen nutze den <span class=\"icon-icon_add nothing-to-see-here-notice__icon\"></span> Button. \n  </div>\n\n  <div class=\"bbar\">\n      <button class=\"icon-button icon-icon_add icon-button--main-bbar\" (click)=\"onClickNewButton($event)\"></button>\n  </div>\n\n</div>\n"
+module.exports = "<div class=\"tbar\"></div>\n\n<div>\n\n  <h1 class=\"main-headline\">Meine Routen</h1>\n\n  <ul class=\"ways\">\n    <li *ngFor=\"let way of ways\" class=\"way\">\n      <a [routerLink]=\"['details', way.id]\">\n\n        <h5 class=\"way__title\">{{way.title || 'unbenannt'}}</h5>\n        <span class=\"way__description\">{{way.stations | stationPreview:2}}</span>\n\n      </a>\n    </li>\n  </ul>\n\n  <div *ngIf=\"ways.length === 0\" class=\"nothing-to-see-here-notice\">\n    Keine Routen vorhanden.<br /> \n    Um eine neue Route anzulegen nutze den <span class=\"icon-icon_add nothing-to-see-here-notice__icon\"></span> Button. \n  </div>\n\n  <div class=\"bbar\">\n      <button class=\"icon-button icon-icon_add icon-button--main-bbar\" (click)=\"onClickNewButton($event)\"></button>\n  </div>\n\n</div>\n"
 
 /***/ }),
 
